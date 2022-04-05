@@ -79,6 +79,8 @@ def start():
          # daha sorunsuz bir etkileşim için basılan tuşların sırasını temizleyin
          stddraw.clearKeysTyped()
 
+      print('a')
+
       # move the active tetromino down by one at each iteration (auto fall)
       # aktif tetromino'yu her yinelemede bir aşağı hareket ettirin (otomatik düşüş)
       success = current_tetromino.move("down", grid)
