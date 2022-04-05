@@ -10,10 +10,12 @@ class GameGrid:
     # Verilen argümanlara dayalı oyun ızgarasını oluşturmak için yapıcı
     def __init__(self, grid_h, grid_w):
 
+
         # set the dimensions of the game grid as the given arguments
         # oyun ızgarasının boyutlarını verilen argümanlar olarak ayarlayın
         self.grid_height = grid_h
         self.grid_width = grid_w
+
         # create a tile matrix to store the tiles landed onto the game grid
         # oyun ızgarasına konan karoları depolamak için bir karo matrisi oluşturun
         self.tile_matrix = np.full((grid_h, grid_w), None)
@@ -76,6 +78,7 @@ class GameGrid:
 
     # Method for drawing the cells and the lines of the game grid
     # Oyun ızgarasının hücrelerini ve çizgilerini çizme yöntemi
+
     def draw_grid(self):
         # for each cell of the game grid
         # oyun ızgarasının her hücresi için
@@ -109,7 +112,9 @@ class GameGrid:
         pos_x, pos_y = -0.5, -0.5
         stddraw.rectangle(pos_x, pos_y, self.grid_width, self.grid_height)
         stddraw.setPenRadius()  # reset the pen radius to its default value
-
+    def DropCurrentTetromino(self):
+        while self.current_tetromino.can_be_moved("down", self):
+            self.current_tetromino.bottom_left_cell.y -= 1
     # Method used for checking whether the grid cell with given row and column
     # indexes is occupied by a tile or empty
     def is_occupied(self, row, col):

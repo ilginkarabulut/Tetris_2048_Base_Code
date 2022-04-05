@@ -14,15 +14,16 @@ import random  # used for creating tetrominoes with random types/shapes
 def start():
     # set the dimensions of the game grid
     # oyun ızgarasının boyutları ayarlanır.
-    grid_h, grid_w = 20, 16
+    grid_h, grid_w = 20, 12
     # set the size of the drawing canvas
     # çizim tuvalinin boyutları ayarlanır
     canvas_h, canvas_w = 40 * grid_h, 40 * grid_w
     stddraw.setCanvasSize(canvas_w, canvas_h)
     # set the scale of the coordinate system
     # kordinat sisteminin ölçeği ayarlanır
-    stddraw.setXscale(-0.5, grid_w - 0.5)
-    stddraw.setYscale(-0.5, grid_h - 0.5)
+    stddraw.setXscale(-1.5, grid_w + 4.5)
+    stddraw.setYscale(-1.5, grid_h - 0.5)
+
 
     # set the dimension values stored and used in the Tetromino class
     # Tetromino sınıfında saklanan ve kullanılan boyut değerlerini ayarlayın
