@@ -43,6 +43,8 @@ def start():
    # oyunu açmadan önce basit bir menü göster
    # aşağıda tanımlanan display_game_menu işlevini kullanarak
    display_game_menu(grid_h, grid_w)
+
+   print("deneme")
    
    # the main game loop (keyboard interaction for moving the tetromino)
    # ana oyun döngüsü (tetrominoyu hareket ettirmek için klavye etkileşimi)
