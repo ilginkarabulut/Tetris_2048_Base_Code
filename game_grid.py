@@ -2,9 +2,12 @@ import lib.stddraw as stddraw  # stddraw is used as a basic graphics library
 from lib.color import Color  # used for coloring the game grid
 from point import Point  # used for tile positions
 import numpy as np  # fundamental Python module for scientific computing
-
+import random
 
 # Class used for modelling the game grid
+from tetromino import Tetromino
+
+
 class GameGrid:
     # Constructor for creating the game grid based on the given arguments
     # Verilen argümanlara dayalı oyun ızgarasını oluşturmak için yapıcı
@@ -80,6 +83,8 @@ class GameGrid:
     # Oyun ızgarasının hücrelerini ve çizgilerini çizme yöntemi
 
     def draw_grid(self):
+
+
         # for each cell of the game grid
         # oyun ızgarasının her hücresi için
         for row in range(self.grid_height):
@@ -93,6 +98,7 @@ class GameGrid:
         stddraw.setPenColor(self.line_color)
         stddraw.setPenRadius(self.line_thickness)
         # x and y ranges for the game grid
+        # oyun ızgarası için x ve y aralıkları
         start_x, end_x = -0.5, self.grid_width - 0.5
         start_y, end_y = -0.5, self.grid_height - 0.5
         for x in np.arange(start_x + 1, end_x, 1):  # vertical inner lines
@@ -102,6 +108,7 @@ class GameGrid:
         stddraw.setPenRadius()  # reset the pen radius to its default value
 
     # Method for drawing the boundaries around the game grid
+    # Oyun ağının etrafındaki sınırları çizme yöntemi
     def draw_boundaries(self):
         # draw a bounding box around the game grid as a rectangle
         stddraw.setPenColor(self.boundary_color)  # using boundary_color
@@ -112,6 +119,7 @@ class GameGrid:
         pos_x, pos_y = -0.5, -0.5
         stddraw.rectangle(pos_x, pos_y, self.grid_width, self.grid_height)
         stddraw.setPenRadius()  # reset the pen radius to its default value
+
     def DropCurrentTetromino(self):
         while self.current_tetromino.can_be_moved("down", self):
             self.current_tetromino.bottom_left_cell.y -= 1
