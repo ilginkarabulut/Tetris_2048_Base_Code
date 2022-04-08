@@ -152,6 +152,29 @@ class GameGrid:
         # the cell is occupied by a tile if it is not None
         return self.tile_matrix[row][col] is not None
 
+    def clear_rows(grid, locked):
+        increase = 0
+        for i in range(len(grid) - 1, -1, -1):  # start check the grid backwards
+            rows = grid[i]  # get last row
+            if (0, 0, 0) not in rows:  # not empty spaces
+                increase += 1
+                # add positions to remove from locked
+                index = i  # row index will be constant
+                for j in range(len(rows)):
+                    try:
+                        del locked[(j, i)]  # delete locked element in the bottom row
+                    except:
+                        continue
+
+            if increase > 0:
+                for key in sorted(list(locked), key=lambda x: x[1])[::-1]:
+                    x, y = key
+                    if y < index:
+                        new_key = (x, y + increase)
+                        locked[new_key] = locked.pop(key)
+
+            return increase
+
     # Method used for checking whether the cell with given row and column indexes
     # is inside the game grid or not
     def is_inside(self, row, col):
