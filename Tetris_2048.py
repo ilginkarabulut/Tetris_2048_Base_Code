@@ -156,7 +156,7 @@ def create_tetromino(grid_height, grid_width):
 # Oyuna başlamadan önce basit bir menüyü görüntüleme işlevi
 def display_game_menu(grid_height, grid_width):
     # colors used for the menu
-    # menü için kullanılan renk
+    # menü için kul lanılan renk
     background_color = Color(42, 69, 99)
     button_color = Color(25, 255, 228)
     text_color = Color(31, 160, 239)
