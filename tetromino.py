@@ -168,6 +168,21 @@ class Tetromino:
                     # sadece oyun ızgarasının içindeki taşları çizin
                     if position.y < self.grid_height:
                         self.tile_matrix[row][col].draw(position)
+    def draw_next_tetromino(self):
+        n = len(self.tile_matrix)  # n = number of rows = number of columns
+        for row in range(n):
+            for col in range(n):
+                # draw each occupied tile (not equal to None) on the game grid
+                if self.tile_matrix[row][col] is not None:
+                    # get the position of the tile
+                    # döşemenin konumunu al
+                    position = Point()
+                    position.x = row + 13
+                    position.y = col + 2
+                    # draw only the tiles that are inside the game grid
+                    # sadece oyun ızgarasının içindeki taşları çizin
+                    if position.y < self.grid_height:
+                        self.tile_matrix[row][col].draw(position)
 
     # Method for moving the tetromino in a given direction by 1 on the game grid
     # Tetromino'yu oyun ızgarasında 1 ile belirli bir yönde hareket ettirme yöntemi

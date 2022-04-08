@@ -22,6 +22,8 @@ class GameGrid:
         # create a tile matrix to store the tiles landed onto the game grid
         # oyun ızgarasına konan karoları depolamak için bir karo matrisi oluşturun
         self.tile_matrix = np.full((grid_h, grid_w), None)
+
+        self.tetro_array = None
         # create the tetromino that is currently being moved on the game grid
         # şu anda oyun ızgarasında taşınmakta olan tetromino'yu oluşturun
         self.current_tetromino = None
@@ -47,7 +49,6 @@ class GameGrid:
 
 
 
-
         # clear the background to empty_cell_color
         # boş_hücre_renk için arka planı temizle
         stddraw.clear(self.empty_cell_color)
@@ -60,6 +61,8 @@ class GameGrid:
         # oyun kılavuzu güncellendi)
         if self.current_tetromino is not None:
             self.current_tetromino.draw()
+
+        self.show_next_piece(self.tetro_array)
         # draw a box around the game grid
         # oyun ızgarasının etrafına bir kutu çizin
         self.draw_boundaries()
@@ -72,6 +75,7 @@ class GameGrid:
 
     def draw_grid(self):
         self.draw_leaderboard()
+
 
         # for each cell of the game grid
         # oyun ızgarasının her hücresi için
@@ -114,6 +118,12 @@ class GameGrid:
         stddraw.setPenColor(GRAY)
         stddraw.rectangle(pos_x + self.grid_width, pos_y, self.grid_width, self.grid_height)
         stddraw.filledRectangle(pos_x + self.grid_width, pos_y, self.grid_width, self.grid_height)
+
+    def show_next_piece(self, arr):
+
+        stddraw.boldText(17, 5, "Next Tetromino")
+        arr[1].draw_next_tetromino()
+
 
     def clear_rows(self, locked):
         increase = 0

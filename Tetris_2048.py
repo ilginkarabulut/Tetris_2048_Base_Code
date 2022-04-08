@@ -38,14 +38,19 @@ def start():
     # by using the create_tetromino function defined below
     # oyun ızgarasına giren ilk tetrominoyu yaratın
     # aşağıda tanımlanan create_tetromino işlevini kullanarak
-    current_tetromino = create_tetromino(grid_h, grid_w)
+    tetro_array = [create_tetromino(grid_h,grid_w),create_tetromino(grid_h, grid_w)]
+    grid.tetro_array = tetro_array
+    current_tetromino = tetro_array[0]
     grid.current_tetromino = current_tetromino
+
+    tetro_array.pop(0)
+    tetro_array.append(create_tetromino(grid_h, grid_w))
 
     # display a simple menu before opening the game
     # by using the display_game_menu function defined below
     # oyunu açmadan önce basit bir menü göster
     # aşağıda tanımlanan display_game_menu işlevini kullanarak
-    # display_game_menu(grid_h, grid_w)
+    #display_game_menu(grid_h, grid_w)
 
     # the main game loop (keyboard interaction for moving the tetromino)
     # ana oyun döngüsü (tetrominoyu hareket ettirmek için klavye etkileşimi)
@@ -108,12 +113,20 @@ def start():
             if game_over:
 
                 break
+            current_tetromino = tetro_array[1]
+            grid.current_tetromino = current_tetromino
+
+
             # create the next tetromino to enter the game grid
             # by using the create_tetromino function defined below
             # oyun ızgarasına girmek için bir sonraki tetromino'yu oluşturun
             # aşağıda tanımlanan create_tetromino işlevini kullanarak
-            current_tetromino = create_tetromino(grid_h, grid_w)
-            grid.current_tetromino = current_tetromino
+            tetro_array.pop(0)
+            tetro_array.append(create_tetromino(grid_h, grid_w))
+
+
+
+
 
         # display the game grid and the current tetromino
         # oyun ızgarasını ve mevcut tetrominoyu göster
