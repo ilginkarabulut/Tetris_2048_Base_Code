@@ -3,6 +3,7 @@ from lib.color import Color  # used for coloring the game grid
 from point import Point  # used for tile positions
 import numpy as np  # fundamental Python module for scientific computing
 import random
+from tetromino import Tetromino
 
 # Class used for modelling the game grid
 from tetromino import Tetromino
@@ -12,7 +13,6 @@ class GameGrid:
     # Constructor for creating the game grid based on the given arguments
     # Verilen argümanlara dayalı oyun ızgarasını oluşturmak için yapıcı
     def __init__(self, grid_h, grid_w):
-
 
         # set the dimensions of the game grid as the given arguments
         # oyun ızgarasının boyutlarını verilen argümanlar olarak ayarlayın
@@ -40,26 +40,14 @@ class GameGrid:
         self.line_thickness = 0.002
         self.box_thickness = 10 * self.line_thickness
 
-    def rotate_clockwise(self):
-
-        tetro_arr = self.current_tetromino.tile_matrix
-
-        # flipud ters çevirir
-        flip_matrix = np.flipud(self.current_tetromino.tile_matrix)
-        # row'u colma colum'u row'a yazdırır.
-        transpose_matrix = np.transpose(flip_matrix)
-
-        self.current_tetromino.tile_matrix = transpose_matrix
-
-    def rotate_counter_clockwise(self):
-        tetro_arr = self.current_tetromino.tile_matrix
-        flip_matrix = np.flipud(self.current_tetromino.tile_matrix)
-        transpose_matrix = np.rot90(flip_matrix, k=1, axes=(0, 1))
-        self.current_tetromino.tile_matrix = transpose_matrix
-
     # Method used for displaying the game grid
     # Oyun tablosunu görüntülemek için kullanılan yöntem
     def display(self):
+
+
+
+
+
         # clear the background to empty_cell_color
         # boş_hücre_renk için arka planı temizle
         stddraw.clear(self.empty_cell_color)
@@ -83,7 +71,7 @@ class GameGrid:
     # Oyun ızgarasının hücrelerini ve çizgilerini çizme yöntemi
 
     def draw_grid(self):
-
+        self.draw_leaderboard()
 
         # for each cell of the game grid
         # oyun ızgarasının her hücresi için
@@ -120,9 +108,40 @@ class GameGrid:
         stddraw.rectangle(pos_x, pos_y, self.grid_width, self.grid_height)
         stddraw.setPenRadius()  # reset the pen radius to its default value
 
+    def draw_leaderboard(self):
+        pos_x, pos_y = -0.5, -0.5
+        GRAY = Color(128, 128, 128)
+        stddraw.setPenColor(GRAY)
+        stddraw.rectangle(pos_x + self.grid_width, pos_y, self.grid_width, self.grid_height)
+        stddraw.filledRectangle(pos_x + self.grid_width, pos_y, self.grid_width, self.grid_height)
+
+    def clear_rows(self, locked):
+        increase = 0
+        for i in range(len(self) - 1, -1, -1):  # start check the grid backwards
+            rows = self[i]  # get last row
+            if (0, 0, 0) not in rows:  # not empty spaces
+                increase += 1
+                # add positions to remove from locked
+                index = i  # row index will be constant
+                for j in range(len(rows)):
+                    try:
+                        del locked[(j, i)]  # delete locked element in the bottom row
+                    except ValueError:
+                        continue
+
+            if increase > 0:
+                for key in sorted(list(locked), key=lambda a: a[1])[::-1]:
+                    x, y = key
+                    if y < index:
+                        new_key = (x, y + increase)
+                        locked[new_key] = locked.pop(key)
+
+            return increase
+
     def DropCurrentTetromino(self):
         while self.current_tetromino.can_be_moved("down", self):
             self.current_tetromino.bottom_left_cell.y -= 1
+
     # Method used for checking whether the grid cell with given row and column
     # indexes is occupied by a tile or empty
     def is_occupied(self, row, col):

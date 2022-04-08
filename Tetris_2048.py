@@ -14,14 +14,14 @@ import random  # used for creating tetrominoes with random types/shapes
 def start():
     # set the dimensions of the game grid
     # oyun ızgarasının boyutları ayarlanır.
-    grid_h, grid_w = 20, 16
+    grid_h, grid_w = 20, 12
     # set the size of the drawing canvas
     # çizim tuvalinin boyutları ayarlanır
-    canvas_h, canvas_w = 40 * grid_h, 40 * grid_w
-    stddraw.setCanvasSize(canvas_w, canvas_h)
+    canvas_h, canvas_w = 40 * grid_h, 40 * (grid_w + 10)
+    stddraw.setCanvasSize(canvas_w + 10, canvas_h)
     # set the scale of the coordinate system
     # kordinat sisteminin ölçeği ayarlanır
-    stddraw.setXscale(-0.5, grid_w + 4.5)
+    stddraw.setXscale(-0.5, grid_w + 9.5)
     stddraw.setYscale(-0.5, grid_h - 0.5)
 
 
@@ -75,10 +75,14 @@ def start():
                 # (yumuşak düşüş: tetromino'nun daha hızlı düşmesine neden olur)
                 current_tetromino.move(key_typed, grid)
             elif key_typed == 'up':
-                grid.rotate_clockwise()
+                current_tetromino.rotate_clockwise(grid)
+
 
             elif key_typed == 'left ctrl':
-                grid.rotate_counter_clockwise()
+                current_tetromino.rotate_counter_clockwise(grid)
+
+            elif key_typed == "space":
+                grid.DropCurrentTetromino()
 
             # clear the queue of the pressed keys for a smoother interaction
             # daha sorunsuz bir etkileşim için basılan tuşların sırasını temizleyin
@@ -102,6 +106,7 @@ def start():
             # end the main game loop if the game is over
             # oyun bittiyse ana oyun döngüsünü sonlandır
             if game_over:
+
                 break
             # create the next tetromino to enter the game grid
             # by using the create_tetromino function defined below
@@ -118,6 +123,9 @@ def start():
     # oyun bittiğinde konsola bir mesaj yazdır
     print("Game over")
 
+#def create_clear_rows(self, locked):
+    #clear_rows = GameGrid(create_clear_rows(self, locked))
+    #return create_clear_rows()
 
 # Function for creating random shaped tetrominoes to enter the game grid
 # Oyun ızgarasına girmek için rastgele şekilli tetrominolar oluşturma işlevi

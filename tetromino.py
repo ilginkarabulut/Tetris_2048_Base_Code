@@ -1,4 +1,3 @@
-import numpy
 
 from tile import Tile  # used for modeling each tile on the tetromino
 from point import Point  # used for tile positions
@@ -6,288 +5,347 @@ import copy as cp  # the copy module is used for copying tiles and positions
 import random  # module for generating random values/permutations
 import numpy as np  # the fundamental Python module for scientific computing
 
+
 # Class used for modeling tetrominoes with 3 out of 7 different types/shapes
 # as (I, O and Z)
 class Tetromino:
-   # The dimensions of the game grid
-   # oyun kafeslerinin boyutlarını tanımladım.
-   grid_height, grid_width = None, None
+    # The dimensions of the game grid
+    # oyun kafeslerinin boyutlarını tanımladım.
+    grid_height, grid_width = None, None
 
-   # Constructor for creating a tetromino with a given type (shape)
-   # Belirli bir şekle sahip bir tetromino oluşturmak için bir yapıcı
-   def __init__(self, type):
-      # set the shape of the tetromino based on the given type
-      # verilen şekle göre tetromino şeklini ayarlayın
-      self.type = type
-      # determine the occupied (non-empty) tiles in the tile matrix
-      # döşeme matrisindeki dolu olnaları belirleyin
-      occupied_tiles = []
-      if type == 'I':
-         n = 4
-         # n = number of rows = number of columns in the tile matrix
-         # n döşeme matrisindeki sütun sayısı
-         # shape of the tetromino I in its initial orientation
-         # tetromino I nın başlangıç yönündeki şekli
-         occupied_tiles.append((1, 0)) # (column_index, row_index)
-         occupied_tiles.append((1, 1))
-         occupied_tiles.append((1, 2))
-         occupied_tiles.append((1, 3))
-      elif type == 'O':
-         n = 2  # n = number of rows = number of columns in the tile matrix
-         # shape of the tetromino O in its initial orientation
-         occupied_tiles.append((0, 0)) # (column_index, row_index)
-         occupied_tiles.append((1, 0))
-         occupied_tiles.append((0, 1))
-         occupied_tiles.append((1, 1))
-      elif type == 'Z':
-         n = 3  # n = number of rows = number of columns in the tile matrix
-         # shape of the tetromino Z in its initial orientation
-         occupied_tiles.append((0, 1)) # (column_index, row_index)
-         occupied_tiles.append((1, 1))
-         occupied_tiles.append((1, 2))
-         occupied_tiles.append((2, 2))
-      elif type == 'T':
-         n = 3
-         occupied_tiles.append((1, 0))  # (column_index, row_index)
-         occupied_tiles.append((1, 1))
-         occupied_tiles.append((1, 2))
-         occupied_tiles.append((0, 1))
-      elif type == 'L':
-         n = 3
-         occupied_tiles.append((1, 0))  # (column_index, row_index)
-         occupied_tiles.append((1, 1))
-         occupied_tiles.append((1, 2))
-         occupied_tiles.append((2, 2))
-      elif type == 'J':
-         n = 3
-         occupied_tiles.append((1, 0))  # (column_index, row_index)
-         occupied_tiles.append((1, 1))
-         occupied_tiles.append((1, 2))
-         occupied_tiles.append((0, 2))
-      elif type == 'S':
-         n = 3
-         occupied_tiles.append((0, 1))  # (column_index, row_index)
-         occupied_tiles.append((2, 0))
-         occupied_tiles.append((1, 1))
-         occupied_tiles.append((1, 0))
-
-
-
-      # create a matrix of numbered tiles based on the shape of the tetromino
-      # tetromino şekline göre numaralandırılmış karolardan oluşan bir matris oluşturun
-      self.tile_matrix = np.full((n, n), None)
-      # create the four tiles (minos) of the tetromino and place these tiles
-      # tetromino'nun dört karosunu oluşturun ve bu karoları yerleştirin
-      # into the tile matrix
-      for i in range(len(occupied_tiles)):
-         col_index, row_index = occupied_tiles[i][0], occupied_tiles[i][1]
-
-         # create the tile at the computed position
-         # bu döşemeyi belirlenen konumda oluşturun
-         self.tile_matrix[row_index][col_index] = Tile()
+    # Constructor for creating a tetromino with a given type (shape)
+    # Belirli bir şekle sahip bir tetromino oluşturmak için bir yapıcı
+    def __init__(self, type):
+        # set the shape of the tetromino based on the given type
+        # verilen şekle göre tetromino şeklini ayarlayın
+        self.type = type
+        # determine the occupied (non-empty) tiles in the tile matrix
+        # döşeme matrisindeki dolu olnaları belirleyin
+        occupied_tiles = []
+        if type == 'I':
+            n = 4
+            # n = number of rows = number of columns in the tile matrix
+            # n döşeme matrisindeki sütun sayısı
+            # shape of the tetromino I in its initial orientation
+            # tetromino I nın başlangıç yönündeki şekli
+            occupied_tiles.append((1, 0))  # (column_index, row_index)
+            occupied_tiles.append((1, 1))
+            occupied_tiles.append((1, 2))
+            occupied_tiles.append((1, 3))
+        elif type == 'O':
+            n = 2  # n = number of rows = number of columns in the tile matrix
+            # shape of the tetromino O in its initial orientation
+            occupied_tiles.append((0, 0))  # (column_index, row_index)
+            occupied_tiles.append((1, 0))
+            occupied_tiles.append((0, 1))
+            occupied_tiles.append((1, 1))
+        elif type == 'Z':
+            n = 3  # n = number of rows = number of columns in the tile matrix
+            # shape of the tetromino Z in its initial orientation
+            occupied_tiles.append((0, 1))  # (column_index, row_index)
+            occupied_tiles.append((1, 1))
+            occupied_tiles.append((1, 2))
+            occupied_tiles.append((2, 2))
+        elif type == 'T':
+            n = 3
+            occupied_tiles.append((1, 0))  # (column_index, row_index)
+            occupied_tiles.append((1, 1))
+            occupied_tiles.append((1, 2))
+            occupied_tiles.append((0, 1))
+        elif type == 'L':
+            n = 3
+            occupied_tiles.append((1, 0))  # (column_index, row_index)
+            occupied_tiles.append((1, 1))
+            occupied_tiles.append((1, 2))
+            occupied_tiles.append((2, 2))
+        elif type == 'J':
+            n = 3
+            occupied_tiles.append((1, 0))  # (column_index, row_index)
+            occupied_tiles.append((1, 1))
+            occupied_tiles.append((1, 2))
+            occupied_tiles.append((0, 2))
+        elif type == 'S':
+            n = 3
+            occupied_tiles.append((0, 1))  # (column_index, row_index)
+            occupied_tiles.append((2, 0))
+            occupied_tiles.append((1, 1))
+            occupied_tiles.append((1, 0))
 
 
-      # initialize the position of the tetromino (the bottom left cell in the
-        #tetrominonun konumunu başlat
-      # tile matrix) with a random horizontal position above the game grid
-      # karo matrisi oyun ızgarası üzerinde herhangi bir yatay konuma sahip
 
-      self.bottom_left_cell = Point()
-      self.bottom_left_cell.y = self.grid_height - 1
 
-      self.bottom_left_cell.x = random.randint(0, self.grid_width - n)
 
-   # Method that returns the position of the cell in the tile matrix specified
-   # by the given row and column indexes
-   # verilen satır ve sütunlara göre belirtilen karo matrisindeki hücreyi döndüren yöntem
-   def get_cell_position(self, row, col):
-      n = len(self.tile_matrix)  # n = number of rows = number of columns
-      position = Point()
+        # create a matrix of numbered tiles based on the shape of the tetromino
+        # tetromino şekline göre numaralandırılmış karolardan oluşan bir matris oluşturun
+        self.tile_matrix = np.full((n, n), None)
+        # create the four tiles (minos) of the tetromino and place these tiles
+        # tetromino'nun dört karosunu oluşturun ve bu karoları yerleştirin
+        # into the tile matrix
+        for i in range(len(occupied_tiles)):
+            col_index, row_index = occupied_tiles[i][0], occupied_tiles[i][1]
 
-      # horizontal position of the cell
-      # hücrenin yatydaki konumu
-      position.x = self.bottom_left_cell.x + col
-      # vertical position of the cell
-      # hücrenin dikeydeki konumu
-      position.y = self.bottom_left_cell.y + (n - 1) - row
-      return position
+            # create the tile at the computed position
+            # bu döşemeyi belirlenen konumda oluşturun
+            self.tile_matrix[row_index][col_index] = Tile()
 
-   # Method that returns a copy of tile_matrix omitting empty rows and columns
-   # Boş satırları ve sütunları atlayarak title_matrix in kopyasını döndüren yöntem
-   # and the position of the bottom left cell when return_position is set
-   # ve return_position ayarlandığında sol alt hücrenin konumu
-   def get_min_bounded_tile_matrix(self, return_position = False):
-      n = len(self.tile_matrix)  # n = number of rows = number of columns
-      # determine rows and columns to copy (omit empty rows and columns)
-      # kopyalanacak satır ve sütunlar ayarlanır
-      min_row, max_row, min_col, max_col = n - 1, 0, n - 1, 0
-      for row in range(n):
-         for col in range(n):
-            if self.tile_matrix[row][col] is not None:
-               if row < min_row:
-                  min_row = row
-               if row > max_row:
-                  max_row = row
-               if col < min_col:
-                  min_col = col
-               if col > max_col:
-                  max_col = col
-      # copy the tiles from the tile matrix and return the resulting copy
-      # karoları karo matrisinden kopyalayın ve elde edilen kopyayı döndürün
-      copy = np.full((max_row - min_row + 1, max_col - min_col + 1), None)
-      for row in range(min_row, max_row + 1):
-         for col in range(min_col, max_col + 1):
-            if self.tile_matrix[row][col] is not None:
-               row_ind = row - min_row
-               col_ind = col - min_col
-               copy[row_ind][col_ind] = cp.deepcopy(self.tile_matrix[row][col])
-      # return just the resulting copy matrix when return_position is not set
-      # return_position ayarlanmadığında yalnızca elde edilen kopya matrisi döndürülür
-      if not return_position:
-         return copy
-      # otherwise return the position of the bottom left cell in copy as well
-      # aksi taktirde kopyadaki sol alt hücrenin konumunu da döndürür
-      else:
-         blc_position = cp.copy(self.bottom_left_cell)
-         blc_position.translate(min_col, (n - 1) - max_row)
-         return copy, blc_position
+        # initialize the position of the tetromino (the bottom left cell in the
+        # tetrominonun konumunu başlat
+        # tile matrix) with a random horizontal position above the game grid
+        # karo matrisi oyun ızgarası üzerinde herhangi bir yatay konuma sahip
 
-   # Method for drawing the tetromino on the game grid
-   # tetromino çizme yöntemi
-   def draw(self):
-      n = len(self.tile_matrix)  # n = number of rows = number of columns
-      for row in range(n):
-         for col in range(n):
-            # draw each occupied tile (not equal to None) on the game grid
-            if self.tile_matrix[row][col] is not None:
-               # get the position of the tile
-               # döşemenin konumunu al
-               position = self.get_cell_position(row, col)
-               # draw only the tiles that are inside the game grid
-               # sadece oyun ızgarasının içindeki taşları çizin
-               if position.y < self.grid_height:
-                  self.tile_matrix[row][col].draw(position)
+        self.bottom_left_cell = Point()
+        self.bottom_left_cell.y = self.grid_height - 1
 
-   # Method for moving the tetromino in a given direction by 1 on the game grid
-   # Tetromino'yu oyun ızgarasında 1 ile belirli bir yönde hareket ettirme yöntemi
-   def move(self, direction, game_grid):
-      # check if the tetromino can be moved in the given direction by using the
-      # tetrominonun istenilen yönde dönüp dönmediği kontrol edilir
-      # can_be_moved method defined below
-      # can_be_moved yöntemi aşağıda tanımlanmıştır
-      if not(self.can_be_moved(direction, game_grid)):
-         return False  # the tetromino cannot be moved in the given direction
-      # move the tetromino by updating the position of the bottom left cell in
-      # sol alt hücrenin konumunu güncelleyerek tetromino'yu hareket ettirin
-      # the tile matrix
-      if direction == "left":
-         self.bottom_left_cell.x -= 1
-      elif direction == "right":
-         self.bottom_left_cell.x += 1
-      else:  # direction == "down"
-         self.bottom_left_cell.y -= 1
-      return True  # successful move in the given direction
-      # verilen yönde başarılı hareket
+        self.bottom_left_cell.x = random.randint(0, self.grid_width - n)
 
-   # Method to check if the tetromino can be moved in the given direction or not
-   # Tetromino'nun verilen yönde hareket ettirilip ettirilemeyeceğini kontrol etme yöntemi
-   def can_be_moved(self, dir, game_grid):
-      n = len(self.tile_matrix)  # n = number of rows = number of columns
-      # check for moving left or right
-      # sola veya sağa hareket edip etmediğini kontrol edin
-      if dir == "left" or dir == "right":
-         for row in range(n):
+    # Method that returns the position of the cell in the tile matrix specified
+    # by the given row and column indexes
+    # verilen satır ve sütunlara göre belirtilen karo matrisindeki hücreyi döndüren yöntem
+    def get_cell_position(self, row, col):
+        n = len(self.tile_matrix)  # n = number of rows = number of columns
+        position = Point()
+
+        # horizontal position of the cell
+        # hücrenin yatydaki konumu
+        position.x = self.bottom_left_cell.x + col
+        # vertical position of the cell
+        # hücrenin dikeydeki konumu
+        position.y = self.bottom_left_cell.y + (n - 1) - row
+        return position
+
+    # Method that returns a copy of tile_matrix omitting empty rows and columns
+    # Boş satırları ve sütunları atlayarak title_matrix in kopyasını döndüren yöntem
+    # and the position of the bottom left cell when return_position is set
+    # ve return_position ayarlandığında sol alt hücrenin konumu
+    def get_min_bounded_tile_matrix(self, return_position=False):
+        n = len(self.tile_matrix)  # n = number of rows = number of columns
+        # determine rows and columns to copy (omit empty rows and columns)
+        # kopyalanacak satır ve sütunlar ayarlanır
+        min_row, max_row, min_col, max_col = n - 1, 0, n - 1, 0
+        for row in range(n):
             for col in range(n):
-               # direction = left --> check the leftmost tile of each row
-               # her satırın en soldaki döşemesini kontrol edin
-               if dir == "left" and self.tile_matrix[row][col] is not None:
-                  leftmost = self.get_cell_position(row, col)
-                  # tetromino cannot go left if any leftmost tile is at x = 0
-                  # tetromino, en soldaki herhangi bir döşeme x = 0'daysa sola gidemez
-                  if leftmost.x == 0:
-                     return False
-                  # skip each row whose leftmost tile is out of the game grid
-                  # (possible for newly entered tetrominoes to the game grid)
-                  # en soldaki döşemesi oyun kılavuzunun dışında olan her satırı atla
-                  # (oyun tablosuna yeni girilen tetrominolar için mümkündür)
-                  if leftmost.y >= self.grid_height:
-                     break
-                  # the tetromino cannot go left if the grid cell on the left of
-                  # any leftmost tile is occupied
-                  # soldaki ızgara hücresi varsa tetromino sola gidemez
-                  # en soldaki herhangi bir döşeme dolu
-                  if game_grid.is_occupied(leftmost.y, leftmost.x - 1):
-                     return False
-                  break  # end the inner for loop
-               # direction = right --> check the rightmost tile of each row
-               # döngünün iç kısmını sonlandır
-               # yön = sağ --> her satırın en sağdaki döşemesini kontrol edin
-               elif dir == "right" and self.tile_matrix[row][n-1-col] is not None:
-                  rightmost = self.get_cell_position(row, n - 1 - col)
-                  # the tetromino cannot go right if any rightmost tile is at
-                  # x = grid_width - 1
-                  # en sağdaki herhangi bir döşeme varsa tetromino sağa gidemez
-                  # x = grid_width - 1
-                  if rightmost.x == self.grid_width - 1:
-                     return False
-                  # skip each row whose rightmost tile is out of the game grid
-                  # (possible for newly entered tetrominoes to the game grid)
-                  # en sağdaki döşemesi oyun kılavuzunun dışında olan her satırı atla
-                  # (oyun tablosuna yeni girilen tetrominolar için mümkündür)
-                  if rightmost.y >= self.grid_height:
-                     break
-                  # the tetromino cannot go right if the grid cell on the right
-                  # of any rightmost tile is occupied
-                  # sağdaki ızgara hücresi varsa tetromino sağa gidemez
-                  # en sağdaki kutucuk dolu
-                  if game_grid.is_occupied(rightmost.y, rightmost.x + 1):
-                     return False
-                  break  # end the inner for loop
-      # direction = down --> check the bottommost tile of each column
-      # döngünün iç kısmını sonlandır
-      # yön = aşağı --> her sütunun en alttaki kutucuğuna bakın
-      else:
-         for col in range(n):
-            for row in range(n - 1, -1, -1):
-               if self.tile_matrix[row][col] is not None:
-                  bottommost = self.get_cell_position(row, col)
-                  # skip each column whose bottommost tile is out of the grid
-                  # (possible for newly entered tetrominoes to the game grid)
-                  # en alttaki döşemesi ızgara dışında olan her sütunu atla
-                  # (oyun tablosuna yeni girilen tetrominolar için mümkündür)
-                  if bottommost.y > self.grid_height:
-                     break
-                  # tetromino cannot go down if any bottommost tile is at y = 0
-                  # en alttaki herhangi bir döşeme y = 0'daysa tetromino aşağı inemez
-                  if bottommost.y == 0:
-                     return False
-                  # or the grid cell below any bottommost tile is occupied
-                  # veya en alttaki herhangi bir döşemenin altındaki ızgara hücresi dolu
-                  if game_grid.is_occupied(bottommost.y - 1, bottommost.x):
-                     return False
-                  break  # end the inner for loop
-      return True  # tetromino can be moved in the given direction
-                   # tetromino verilen yönde hareket ettirilebilir
+                if self.tile_matrix[row][col] is not None:
+                    if row < min_row:
+                        min_row = row
+                    if row > max_row:
+                        max_row = row
+                    if col < min_col:
+                        min_col = col
+                    if col > max_col:
+                        max_col = col
+        # copy the tiles from the tile matrix and return the resulting copy
+        # karoları karo matrisinden kopyalayın ve elde edilen kopyayı döndürün
+        copy = np.full((max_row - min_row + 1, max_col - min_col + 1), None)
+        for row in range(min_row, max_row + 1):
+            for col in range(min_col, max_col + 1):
+                if self.tile_matrix[row][col] is not None:
+                    row_ind = row - min_row
+                    col_ind = col - min_col
+                    copy[row_ind][col_ind] = cp.deepcopy(self.tile_matrix[row][col])
+        # return just the resulting copy matrix when return_position is not set
+        # return_position ayarlanmadığında yalnızca elde edilen kopya matrisi döndürülür
+        if not return_position:
+            return copy
+        # otherwise return the position of the bottom left cell in copy as well
+        # aksi taktirde kopyadaki sol alt hücrenin konumunu da döndürür
+        else:
+            blc_position = cp.copy(self.bottom_left_cell)
+            blc_position.translate(min_col, (n - 1) - max_row)
+            return copy, blc_position
 
-   def rotate(self, game_grid):
-      n = len(self.tile_matrix)
-      self.bottom_left_cell = Point()
-      self.bottom_left_cell.y = self.grid_height - 1
-      n_tile_matrix = np.array(self.tile_matrix)
-      self.bottom_left_cell.x = random.randint(0, self.grid_width - n)
-      for row in range(n):
-         for col in range(n):
-            position = Point()
-            if self.tile_matrix[row][col]:
-               position.x = row
-               position.y = col
-            else:
-               position.x =self.bottom_left_cell.x + col
-               position.y =self.bottom_left_cell.y + (n-1) - row
-            if position.x < 0 or position.x >= self.grid_width:
-               return False
-            if game_grid.is_occupied(position):
-               return False
-      rotated_matrix = ()
+    # Method for drawing the tetromino on the game grid
+    # tetromino çizme yöntemi
+    def draw(self):
+        n = len(self.tile_matrix)  # n = number of rows = number of columns
+        for row in range(n):
+            for col in range(n):
+                # draw each occupied tile (not equal to None) on the game grid
+                if self.tile_matrix[row][col] is not None:
+                    # get the position of the tile
+                    # döşemenin konumunu al
+                    position = self.get_cell_position(row, col)
+                    # draw only the tiles that are inside the game grid
+                    # sadece oyun ızgarasının içindeki taşları çizin
+                    if position.y < self.grid_height:
+                        self.tile_matrix[row][col].draw(position)
+
+    # Method for moving the tetromino in a given direction by 1 on the game grid
+    # Tetromino'yu oyun ızgarasında 1 ile belirli bir yönde hareket ettirme yöntemi
+    def move(self, direction, game_grid):
+        # check if the tetromino can be moved in the given direction by using the
+        # tetrominonun istenilen yönde dönüp dönmediği kontrol edilir
+        # can_be_moved method defined below
+        # can_be_moved yöntemi aşağıda tanımlanmıştır
+        if not (self.can_be_moved(direction, game_grid)):
+            return False  # the tetromino cannot be moved in the given direction
+        # move the tetromino by updating the position of the bottom left cell in
+        # sol alt hücrenin konumunu güncelleyerek tetromino'yu hareket ettirin
+        # the tile matrix
+        if direction == "left":
+            self.bottom_left_cell.x -= 1
+        elif direction == "right":
+            self.bottom_left_cell.x += 1
+        else:  # direction == "down"
+            self.bottom_left_cell.y -= 1
+        return True  # successful move in the given direction
+        # verilen yönde başarılı hareket
+
+    def rotate_clockwise(self, game_grid):
+        n = len(self.tile_matrix)
+        first_pos_x = self.bottom_left_cell.x
+        first_pos_y = self.bottom_left_cell.y
+        is_occupied = False
+        for i in range(n):
+            for j in range(n):
+                if self.tile_matrix[j][i] is not None:
+                    pos = self.tile_matrix[j][i].get_position()
+                    pos.x -= first_pos_x
+                    pos.y -= first_pos_y
+
+                    temp = pos.y
+                    pos.y = (n - 1 - pos.x) + first_pos_y
+                    pos.x = temp + first_pos_x
+                    if pos.x < 0 or pos.y < 0 or pos.x > self.grid_width - 1 or game_grid.is_occupied(pos.y, pos.x):
+                        is_occupied = True
 
 
+
+        # flipud ters çevirir
+        flip_matrix = np.flipud(self.tile_matrix)
+        # row'u colma colum'u row'a yazdırır.
+        transpose_matrix = np.transpose(flip_matrix)
+        self.tile_matrix = transpose_matrix
+
+        if is_occupied:
+            return False
+        return True
+
+    def rotate_counter_clockwise(self, game_grid):
+        n = len(self.tile_matrix)
+        first_pos_x = self.bottom_left_cell.x
+        first_pos_y = self.bottom_left_cell.y
+        is_occupied = False
+        for i in range(n):
+            for j in range(n):
+                if self.tile_matrix[j][i] is not None:
+                    pos = self.tile_matrix[j][i].get_position()
+                    pos.x -= first_pos_x
+                    pos.y -= first_pos_y
+
+                    temp = pos.y
+                    pos.y = (n - 1 - pos.x) + first_pos_y
+                    pos.x = temp + first_pos_x
+                    if pos.x < 0 or pos.y < 0 or pos.x > self.grid_width - 1 or game_grid.is_occupied(pos.y, pos.x):
+                        is_occupied = True
+
+        transpose_matrix = np.transpose(self.tile_matrix)
+        flip_matrix = np.flipud(transpose_matrix)
+        self.tile_matrix = flip_matrix
+
+        if is_occupied:
+            return False
+
+        return True
+
+
+
+    # Method to check if the tetromino can be moved in the given direction or not
+    # Tetromino'nun verilen yönde hareket ettirilip ettirilemeyeceğini kontrol etme yöntemi
+    def can_be_moved(self, dir, game_grid):
+        n = len(self.tile_matrix)  # n = number of rows = number of columns
+        # check for moving left or right
+        # sola veya sağa hareket edip etmediğini kontrol edin
+        if dir == "left" or dir == "right":
+            for row in range(n):
+                for col in range(n):
+                    # direction = left --> check the leftmost tile of each row
+                    # her satırın en soldaki döşemesini kontrol edin
+                    if dir == "left" and self.tile_matrix[row][col] is not None:
+                        leftmost = self.get_cell_position(row, col)
+                        # tetromino cannot go left if any leftmost tile is at x = 0
+                        # tetromino, en soldaki herhangi bir döşeme x = 0'daysa sola gidemez
+                        if leftmost.x == 0:
+                            return False
+                        # skip each row whose leftmost tile is out of the game grid
+                        # (possible for newly entered tetrominoes to the game grid)
+                        # en soldaki döşemesi oyun kılavuzunun dışında olan her satırı atla
+                        # (oyun tablosuna yeni girilen tetrominolar için mümkündür)
+                        if leftmost.y >= self.grid_height:
+                            break
+                        # the tetromino cannot go left if the grid cell on the left of
+                        # any leftmost tile is occupied
+                        # soldaki ızgara hücresi varsa tetromino sola gidemez
+                        # en soldaki herhangi bir döşeme dolu
+                        if game_grid.is_occupied(leftmost.y, leftmost.x - 1):
+                            return False
+                        break  # end the inner for loop
+                    # direction = right --> check the rightmost tile of each row
+                    # döngünün iç kısmını sonlandır
+                    # yön = sağ --> her satırın en sağdaki döşemesini kontrol edin
+                    elif dir == "right" and self.tile_matrix[row][n - 1 - col] is not None:
+                        rightmost = self.get_cell_position(row, n - 1 - col)
+                        # the tetromino cannot go right if any rightmost tile is at
+                        # x = grid_width - 1
+                        # en sağdaki herhangi bir döşeme varsa tetromino sağa gidemez
+                        # x = grid_width - 1
+                        if rightmost.x == self.grid_width - 1:
+                            return False
+                        # skip each row whose rightmost tile is out of the game grid
+                        # (possible for newly entered tetrominoes to the game grid)
+                        # en sağdaki döşemesi oyun kılavuzunun dışında olan her satırı atla
+                        # (oyun tablosuna yeni girilen tetrominolar için mümkündür)
+                        if rightmost.y >= self.grid_height:
+                            break
+                        # the tetromino cannot go right if the grid cell on the right
+                        # of any rightmost tile is occupied
+                        # sağdaki ızgara hücresi varsa tetromino sağa gidemez
+                        # en sağdaki kutucuk dolu
+                        if game_grid.is_occupied(rightmost.y, rightmost.x + 1):
+                            return False
+                        break  # end the inner for loop
+        # direction = down --> check the bottommost tile of each column
+        # döngünün iç kısmını sonlandır
+        # yön = aşağı --> her sütunun en alttaki kutucuğuna bakın
+        else:
+            for col in range(n):
+                for row in range(n - 1, -1, -1):
+                    if self.tile_matrix[row][col] is not None:
+                        bottommost = self.get_cell_position(row, col)
+                        # skip each column whose bottommost tile is out of the grid
+                        # (possible for newly entered tetrominoes to the game grid)
+                        # en alttaki döşemesi ızgara dışında olan her sütunu atla
+                        # (oyun tablosuna yeni girilen tetrominolar için mümkündür)
+                        if bottommost.y > self.grid_height:
+                            break
+                        # tetromino cannot go down if any bottommost tile is at y = 0
+                        # en alttaki herhangi bir döşeme y = 0'daysa tetromino aşağı inemez
+                        if bottommost.y == 0:
+                            return False
+                        # or the grid cell below any bottommost tile is occupied
+                        # veya en alttaki herhangi bir döşemenin altındaki ızgara hücresi dolu
+                        if game_grid.is_occupied(bottommost.y - 1, bottommost.x):
+                            return False
+                        break  # end the inner for loop
+        return True  # tetromino can be moved in the given direction
+        # tetromino verilen yönde hareket ettirilebilir
+
+    def rotate(self, game_grid):
+        n = len(self.tile_matrix)
+        self.bottom_left_cell = Point()
+        self.bottom_left_cell.y = self.grid_height - 1
+        n_tile_matrix = np.array(self.tile_matrix)
+        self.bottom_left_cell.x = random.randint(0, self.grid_width - n)
+        for row in range(n):
+            for col in range(n):
+                position = Point()
+                if self.tile_matrix[row][col]:
+                    position.x = row
+                    position.y = col
+                else:
+                    position.x = self.bottom_left_cell.x + col
+                    position.y = self.bottom_left_cell.y + (n - 1) - row
+                if position.x < 0 or position.x >= self.grid_width:
+                    return False
+                if game_grid.is_occupied(position):
+                    return False
+        rotated_matrix = ()
