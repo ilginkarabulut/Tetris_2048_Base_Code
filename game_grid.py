@@ -43,11 +43,6 @@ class GameGrid:
     # Method used for displaying the game grid
     # Oyun tablosunu görüntülemek için kullanılan yöntem
     def display(self):
-
-
-
-
-
         # clear the background to empty_cell_color
         # boş_hücre_renk için arka planı temizle
         stddraw.clear(self.empty_cell_color)
@@ -60,6 +55,8 @@ class GameGrid:
         # oyun kılavuzu güncellendi)
         if self.current_tetromino is not None:
             self.current_tetromino.draw()
+
+        self.clear_rows()
         # draw a box around the game grid
         # oyun ızgarasının etrafına bir kutu çizin
         self.draw_boundaries()
@@ -115,28 +112,25 @@ class GameGrid:
         stddraw.rectangle(pos_x + self.grid_width, pos_y, self.grid_width, self.grid_height)
         stddraw.filledRectangle(pos_x + self.grid_width, pos_y, self.grid_width, self.grid_height)
 
-    def clear_rows(self, locked):
-        increase = 0
-        for i in range(len(self) - 1, -1, -1):  # start check the grid backwards
-            rows = self[i]  # get last row
-            if (0, 0, 0) not in rows:  # not empty spaces
-                increase += 1
-                # add positions to remove from locked
-                index = i  # row index will be constant
-                for j in range(len(rows)):
-                    try:
-                        del locked[(j, i)]  # delete locked element in the bottom row
-                    except ValueError:
-                        continue
+    def clear_rows(self):
+        tiles = self.tile_matrix
+        height = self.grid_height
+        width = self.grid_width
+        for i in range(height):
+            count = 0
+            for j in range(width):
+                if tiles[i][j] is not None:
+                    count += 1
+                if count >= 12:
+                    for k in range(width):
+                        tiles[i][k] = None
 
-            if increase > 0:
-                for key in sorted(list(locked), key=lambda a: a[1])[::-1]:
-                    x, y = key
-                    if y < index:
-                        new_key = (x, y + increase)
-                        locked[new_key] = locked.pop(key)
+    #silinen rowun üstündeki tileları bir birim düşürmek için
+    def dropTiles(self):
 
-            return increase
+    #silinen tileların pozisyonunu bulur
+    def find_tiles_position(self):
+
 
     def DropCurrentTetromino(self):
         while self.current_tetromino.can_be_moved("down", self):
@@ -152,28 +146,6 @@ class GameGrid:
         # the cell is occupied by a tile if it is not None
         return self.tile_matrix[row][col] is not None
 
-    def clear_rows(grid, locked):
-        increase = 0
-        for i in range(len(grid) - 1, -1, -1):  # start check the grid backwards
-            rows = grid[i]  # get last row
-            if (0, 0, 0) not in rows:  # not empty spaces
-                increase += 1
-                # add positions to remove from locked
-                index = i  # row index will be constant
-                for j in range(len(rows)):
-                    try:
-                        del locked[(j, i)]  # delete locked element in the bottom row
-                    except:
-                        continue
-
-            if increase > 0:
-                for key in sorted(list(locked), key=lambda x: x[1])[::-1]:
-                    x, y = key
-                    if y < index:
-                        new_key = (x, y + increase)
-                        locked[new_key] = locked.pop(key)
-
-            return increase
 
     # Method used for checking whether the cell with given row and column indexes
     # is inside the game grid or not
