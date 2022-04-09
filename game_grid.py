@@ -32,11 +32,11 @@ class GameGrid:
         self.game_over = False
         # set the color used for the empty grid cells
         # boş ızgara hücreleri için kullanılan rengi ayarlayın
-        self.empty_cell_color = Color(42, 69, 99)
+        self.empty_cell_color = Color(128, 128, 128)
         # set the colors used for the grid lines and the grid boundaries
         # ızgara çizgileri ve ızgara sınırları için kullanılan renkleri ayarlayın
-        self.line_color = Color(0, 100, 200)
-        self.boundary_color = Color(0, 100, 200)
+        self.line_color = Color(192, 192, 192)
+        self.boundary_color = Color(192, 192, 192)
         # thickness values used for the grid lines and the boundaries
         # ızgara çizgileri ve sınırlar için kullanılan kalınlık değerleri
         self.line_thickness = 0.002
@@ -85,6 +85,8 @@ class GameGrid:
                 # ızgara hücresi bir döşeme tarafından işgal edilmişse döşemeyi çizin
                 if self.tile_matrix[row][col] is not None:
                     self.tile_matrix[row][col].draw(Point(col, row))
+        # buraya durdurma butonunu çizeceksin.
+
         # draw the inner lines of the grid
         # ızgaranın iç çizgilerini çizin
         stddraw.setPenColor(self.line_color)
@@ -106,10 +108,10 @@ class GameGrid:
         stddraw.setPenColor(self.boundary_color)  # using boundary_color
         # set the pen radius as box_thickness (half of this thickness is visible
         # for the bounding box as its lines lie on the boundaries of the canvas)
-        stddraw.setPenRadius(self.box_thickness)
+        #stddraw.setPenRadius(self.box_thickness)
         # the coordinates of the bottom left corner of the game grid
         pos_x, pos_y = -0.5, -0.5
-        stddraw.rectangle(pos_x, pos_y, self.grid_width, self.grid_height)
+        stddraw.rectangle(pos_x + 0., pos_y, self.grid_width, self.grid_height)
         stddraw.setPenRadius()  # reset the pen radius to its default value
 
     def draw_leaderboard(self):
@@ -120,33 +122,34 @@ class GameGrid:
         stddraw.filledRectangle(pos_x + self.grid_width, pos_y, self.grid_width, self.grid_height)
 
     def show_next_piece(self, arr):
-
-        stddraw.boldText(17, 5, "Next Tetromino")
+        stddraw.setFontSize(20)
+        stddraw.boldText(14, 6, "Next Tetromino")
         arr[1].draw_next_tetromino()
+        stddraw.rectangle(12, 1, 6, 7)
 
 
-    def clear_rows(self, locked):
-        increase = 0
-        for i in range(len(self) - 1, -1, -1):  # start check the grid backwards
-            rows = self[i]  # get last row
-            if (0, 0, 0) not in rows:  # not empty spaces
-                increase += 1
-                # add positions to remove from locked
-                index = i  # row index will be constant
-                for j in range(len(rows)):
-                    try:
-                        del locked[(j, i)]  # delete locked element in the bottom row
-                    except ValueError:
-                        continue
 
-            if increase > 0:
-                for key in sorted(list(locked), key=lambda a: a[1])[::-1]:
-                    x, y = key
-                    if y < index:
-                        new_key = (x, y + increase)
-                        locked[new_key] = locked.pop(key)
+    def clear_rows(self):
+        tiles = self.tile_matrix
+        height = self.grid_height
+        width = self.grid_width
+        count = 0
+        for i in range(height):
 
-            return increase
+            for j in range(width):
+                if tiles[i][j] is not None:
+                    count += 1
+            if count >= 12:
+                for k in range(width):
+                    self.tile_matrix[i][k] = None
+                    for x in range(i, self.grid_height - 1):
+                        if self.tile_matrix[x + 1][k] is not None:
+                            tmp = self.tile_matrix[x + 1][k]
+                            self.tile_matrix[x + 1][k].move(0, -1)
+                            self.tile_matrix[x + 1][k] = None
+                            self.tile_matrix[x][k] = tmp
+            count = 0
+
 
     def DropCurrentTetromino(self):
         while self.current_tetromino.can_be_moved("down", self):

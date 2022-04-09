@@ -12,6 +12,7 @@ import random  # used for creating tetrominoes with random types/shapes
 # Main function where this program starts execution
 # programın yürütülmeye başlandığı ana işlev
 def start():
+
     # set the dimensions of the game grid
     # oyun ızgarasının boyutları ayarlanır.
     grid_h, grid_w = 20, 12
@@ -23,6 +24,8 @@ def start():
     # kordinat sisteminin ölçeği ayarlanır
     stddraw.setXscale(-0.5, grid_w + 9.5)
     stddraw.setYscale(-0.5, grid_h - 0.5)
+
+    row_cleaned = False
 
 
 
@@ -50,7 +53,7 @@ def start():
     # by using the display_game_menu function defined below
     # oyunu açmadan önce basit bir menü göster
     # aşağıda tanımlanan display_game_menu işlevini kullanarak
-    #display_game_menu(grid_h, grid_w)
+    display_game_menu(grid_h, grid_w)
 
     # the main game loop (keyboard interaction for moving the tetromino)
     # ana oyun döngüsü (tetrominoyu hareket ettirmek için klavye etkileşimi)
@@ -80,11 +83,16 @@ def start():
                 # (yumuşak düşüş: tetromino'nun daha hızlı düşmesine neden olur)
                 current_tetromino.move(key_typed, grid)
             elif key_typed == 'up':
-                current_tetromino.rotate_clockwise(grid)
+                x = current_tetromino.rotate_clockwise(grid)
+                if not x:
+                    current_tetromino.rotate_counter_clockwise(grid)
 
 
             elif key_typed == 'left ctrl':
-                current_tetromino.rotate_counter_clockwise(grid)
+                x = current_tetromino.rotate_counter_clockwise(grid)
+                if not x:
+                    current_tetromino.rotate_clockwise(grid)
+
 
             elif key_typed == "space":
                 grid.DropCurrentTetromino()
@@ -96,6 +104,7 @@ def start():
         # move the active tetromino down by one at each iteration (auto fall)
         # aktif tetromino'yu her yinelemede bir aşağı hareket ettirin (otomatik düşüş)
         success = current_tetromino.move("down", grid)
+        grid.clear_rows()
 
         # place the active tetromino on the grid when it cannot go down anymore
         # aktif tetromino'yu artık aşağı inemediğinde ızgaraya yerleştirin

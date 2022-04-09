@@ -213,7 +213,7 @@ class Tetromino:
         for i in range(n):
             for j in range(n):
                 if self.tile_matrix[j][i] is not None:
-                    pos = self.tile_matrix[j][i].get_position()
+                    pos = self.get_cell_position(i, j)
                     pos.x -= first_pos_x
                     pos.y -= first_pos_y
 
@@ -239,19 +239,29 @@ class Tetromino:
         n = len(self.tile_matrix)
         first_pos_x = self.bottom_left_cell.x
         first_pos_y = self.bottom_left_cell.y
+        # a boolean variable to check if the new position after rotation was occupied before
+        # it also checks whether the tiles exceed the game grid
         is_occupied = False
+
+        # update the tiles' positions
         for i in range(n):
             for j in range(n):
                 if self.tile_matrix[j][i] is not None:
-                    pos = self.tile_matrix[j][i].get_position()
+                    pos = self.get_cell_position(j, i)
+
+                    # subtract first positions
                     pos.x -= first_pos_x
                     pos.y -= first_pos_y
 
-                    temp = pos.y
-                    pos.y = (n - 1 - pos.x) + first_pos_y
-                    pos.x = temp + first_pos_x
+                    temp = pos.x
+                    pos.x = (n - 1 - pos.y) + first_pos_x
+                    pos.y = temp + first_pos_y
+
+                    # Do tiles exceed the grid?
+                    # Was the tile occupied before?
                     if pos.x < 0 or pos.y < 0 or pos.x > self.grid_width - 1 or game_grid.is_occupied(pos.y, pos.x):
                         is_occupied = True
+
 
         transpose_matrix = np.transpose(self.tile_matrix)
         flip_matrix = np.flipud(transpose_matrix)

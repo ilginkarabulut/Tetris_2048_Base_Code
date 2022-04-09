@@ -3,6 +3,8 @@ from lib.color import Color  # used for coloring the tile and the number on it
 import random
 from point import Point
 import copy as cp
+import random
+import math
 
 
 # Class used for modeling numbered tiles as in 2048
@@ -17,36 +19,41 @@ class Tile:
     # Constructor that creates a tile with 2 as the number on it
     def __init__(self, position=Point(0, 0)):
 
-        random_list = [2, 4]
-
+        random_list = [2, 4, 8]
         x = random.choice(random_list)
         if x == 2:
             # set the number on the tile
-            self.number = 4
+            self.number = 2
             # set the colors of the tile
             self.background_color = Color(0, 178, 199)  # background (tile) color
             self.foreground_color = Color(0, 100, 200)  # foreground (number) color
             self.box_color = Color(0, 100, 200)  # box (boundary) color
 
-        else:
+        elif x == 4:
             # set the number on the tile
-            self.number = 2
+            self.number = 4
             # set the colors of the tile
             self.background_color = Color(151, 178, 199)  # background (tile) color
             self.foreground_color = Color(0, 100, 200)  # foreground (number) color
-            self.box_color = Color(0, 100, 200)  # box (boundary) color
+            self.box_color = Color(0, 100, 200) # box (boundary) color
+
+        elif x == 8:
+
+            self.number = 8
+            self.background_color = Color(192, 178, 199)  # background (tile) color
+            self.foreground_color = Color(0, 100, 200)  # foreground (number) color
+            self.box_color = Color(0, 100, 200)
+
 
         self.position = Point(position.x, position.y)
+        random_index = random.randint(0, len(random_list) - 1)
+        random_value = random_list[random_index]
 
-    # Setter method for the position of the tile
-    def set_position(self, position):
-        # set the position of the tile as the given position
-        self.position = cp.copy(position)
 
-    # Getter method for the position of the tile
-    def get_position(self):
-        # return the position of the tile
-        return cp.copy(self.position)
+
+
+    def move(self, dx, dy):
+        self.position.translate(dx, dy)
 
     # Method for drawing the tile
     def draw(self, position, length=1):
@@ -63,3 +70,13 @@ class Tile:
         stddraw.setFontFamily(Tile.font_family)
         stddraw.setFontSize(Tile.font_size)
         stddraw.text(position.x, position.y, str(self.number))
+
+    def can_be_moved(self, moving_position):
+        grid_h, grid_w = 20, 12
+
+        if (self.position.x + moving_position.x >= 12) or (self.position.x + moving_position.x < 0):
+            return False
+        if (self.position.y + moving_position.y >= 20) or (self.position.y + moving_position.y < 0):
+            return False
+
+        return True
