@@ -25,7 +25,7 @@ class Tile:
             # set the number on the tile
             self.number = 2
             # set the colors of the tile
-            self.background_color = Color(0, 178, 199)  # background (tile) color
+            self.background_color = Color(255, 255, 255)  # background (tile) color
             self.foreground_color = Color(0, 100, 200)  # foreground (number) color
             self.box_color = Color(0, 100, 200)  # box (boundary) color
 
@@ -33,14 +33,14 @@ class Tile:
             # set the number on the tile
             self.number = 4
             # set the colors of the tile
-            self.background_color = Color(151, 178, 199)  # background (tile) color
+            self.background_color = Color(255, 235, 205)  # background (tile) color
             self.foreground_color = Color(0, 100, 200)  # foreground (number) color
             self.box_color = Color(0, 100, 200) # box (boundary) color
 
         elif x == 8:
 
             self.number = 8
-            self.background_color = Color(192, 178, 199)  # background (tile) color
+            self.background_color = Color(255, 222, 173)  # background (tile) color
             self.foreground_color = Color(0, 100, 200)  # foreground (number) color
             self.box_color = Color(0, 100, 200)
 
@@ -49,8 +49,8 @@ class Tile:
         random_index = random.randint(0, len(random_list) - 1)
         random_value = random_list[random_index]
 
-
-
+    def double(self):
+        self.number *= 2
 
     def move(self, dx, dy):
         self.position.translate(dx, dy)

@@ -104,6 +104,7 @@ def start():
         # move the active tetromino down by one at each iteration (auto fall)
         # aktif tetromino'yu her yinelemede bir aşağı hareket ettirin (otomatik düşüş)
         success = current_tetromino.move("down", grid)
+        grid.merge(0)
         grid.clear_rows()
 
         # place the active tetromino on the grid when it cannot go down anymore
@@ -120,6 +121,7 @@ def start():
             # end the main game loop if the game is over
             # oyun bittiyse ana oyun döngüsünü sonlandır
             if game_over:
+                display_gameover_menu(grid_w + 4, grid_h + 3)
 
                 break
             current_tetromino = tetro_array[1]
@@ -224,6 +226,42 @@ def display_game_menu(grid_height, grid_width):
                 if mouse_y >= button_blc_y and mouse_y <= button_blc_y + button_h:
                     break  # break the loop to end the method and start the game
                     # yöntemi sonlandırmak ve oyunu başlatmak için döngüyü kırın
+def display_gameover_menu(grid_height, grid_width):
+    # colors used for the menu
+    # menü için kul lanılan renk
+    background_color = Color(42, 69, 99)
+    button_color = Color(25, 255, 228)
+    text_color = Color(31, 160, 239)
+    # clear the background canvas to background_color
+    # arka plan tuvalini background_color olarak temizle
+    stddraw.clear(background_color)
+    # get the directory in which this python code file is placed
+    # bu python kod dosyasının yerleştirildiği dizini alın
+    current_dir = os.path.dirname(os.path.realpath(__file__))
+    # path of the image file
+    # görüntü dosyasının yolu
+    img_file = current_dir + "/images/gameover.png"
+    # center coordinates to display the image
+    # resmi görüntülemek için merkez koordinatları
+    img_center_x, img_center_y = (grid_width - 1) / 2, grid_height - 7
+    # image is represented using the Picture class
+    # resim, Resim sınıfı kullanılarak temsil edilir
+    image_to_display = Picture(img_file)
+    # display the image
+    # resmi göster
+    stddraw.picture(image_to_display, img_center_x, img_center_y)
+    # dimensions of the start game button
+    # oyunu başlat düğmesinin boyutları
+
+    # display the text on the start game button
+    # oyunu başlat düğmesindeki metni göster
+    while True:
+        # display the menu and wait for a short time (50 ms)
+        # menüyü görüntüleyin ve kısa bir süre bekleyin (50 ms)
+        stddraw.show(50)
+
+    # menu interaction loop
+    # menü etkileşim döngüsü
 
 
 # start() function is specified as the entry point (main function) from which

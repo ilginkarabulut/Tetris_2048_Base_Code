@@ -134,6 +134,7 @@ class GameGrid:
         height = self.grid_height
         width = self.grid_width
         count = 0
+
         for i in range(height):
 
             for j in range(width):
@@ -195,5 +196,77 @@ class GameGrid:
                     # the game is over if any placed tile is above the game grid
                     else:
                         self.game_over = True
+
+        #self.check_grid()
+
         # return the game_over flag
         return self.game_over
+
+    def move_row(self, row):
+        for i_row in range(row, self.grid_height):
+            for i_col in range(self.grid_width):
+                if self.tile_matrix[i_row][i_col] != None:
+                    self.tile_matrix[i_row][i_col].move(0, -1)
+
+    def move_column(self, col, row):
+        for i_row in range(row, self.grid_height):
+            if self.tile_matrix[i_row][col] != None:
+                self.tile_matrix[i_row][col].move(0, -1)
+        transpose = self.tile_matrix.transpose()
+        deleted = np.delete(transpose[col], row)
+        transpose[col] = np.append(deleted, [None], axis=0)
+        self.tile_matrix = transpose.transpose()
+
+    def merge(self, total_score):
+        for col in range(self.grid_width):
+            for row in range(self.grid_height - 1):
+                if self.tile_matrix[row][col] != None and self.tile_matrix[row + 1][col] != None:
+                    if self.tile_matrix[row][col].number == self.tile_matrix[row + 1][col].number:
+                        # self.total_score += self.tile_matrix[row_i][col_i].number * 2
+                        total_score += self.tile_matrix[row][col].number * 2
+                        #self.tile_matrix[row][col].double()
+                        self.tile_matrix[row][col].number *= 2
+                        self.tile_matrix[row][col].foreground_color = Color(0, 100, 200)
+                        if self.tile_matrix[row][col].number == 4:
+                            self.tile_matrix[row][col].background_color = Color(255, 235, 205)
+                        elif self.tile_matrix[row][col].number == 8:
+                            self.tile_matrix[row][col].background_color = Color(255, 222, 173)
+                        elif self.tile_matrix[row][col].number == 16:
+                            self.tile_matrix[row][col].background_color = Color(128, 0, 0)
+                        elif self.tile_matrix[row][col].number == 32:
+                            self.tile_matrix[row][col].background_color = Color(188, 143, 143)
+                        elif self.tile_matrix[row][col].number == 64:
+                            self.tile_matrix[row][col].background_color = Color(218, 165, 32)
+                        elif self.tile_matrix[row][col].number == 128:
+                            self.tile_matrix[row][col].background_color = Color(205, 133, 63)
+                        elif self.tile_matrix[row][col].number == 256:
+                            self.tile_matrix[row][col].background_color = Color(210, 105, 30)
+                        elif self.tile_matrix[row][col].number == 512:
+                            self.tile_matrix[row][col].background_color = Color(160, 82, 45)
+                        elif self.tile_matrix[row][col].number == 1024:
+                            self.tile_matrix[row][col].background_color = Color(165, 42, 42)
+                        elif self.tile_matrix[row][col].number == 2048:
+                            self.tile_matrix[row][col].background_color = Color(128, 0, 0)
+                        else:
+                            self.tile_matrix[row][col].background_color = Color(0, 0, 0)
+
+                        self.tile_matrix[row + 1][col] = None
+
+                        self.move_column(col, row + 1)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
