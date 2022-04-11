@@ -254,19 +254,3 @@ class GameGrid:
 
                         self.move_column(col, row + 1)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
