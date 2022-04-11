@@ -97,6 +97,10 @@ def start():
             elif key_typed == "space":
                 grid.DropCurrentTetromino()
 
+            elif key_typed == "p":
+                display_pause_menu(grid_w, grid_h)
+
+
             # clear the queue of the pressed keys for a smoother interaction
             # daha sorunsuz bir etkileşim için basılan tuşların sırasını temizleyin
             stddraw.clearKeysTyped()
@@ -122,7 +126,7 @@ def start():
             # oyun bittiyse ana oyun döngüsünü sonlandır
             if game_over:
                 display_gameover_menu(grid_w + 4, grid_h + 3)
-
+                display_pause_menu(grid_w + 4, grid_h + 3)
                 break
             current_tetromino = tetro_array[1]
             grid.current_tetromino = current_tetromino
@@ -168,9 +172,9 @@ def create_tetromino(grid_height, grid_width):
 def display_game_menu(grid_height, grid_width):
     # colors used for the menu
     # menü için kul lanılan renk
-    background_color = Color(42, 69, 99)
-    button_color = Color(25, 255, 228)
-    text_color = Color(31, 160, 239)
+    background_color = Color(255, 255, 255)
+    button_color = Color(0, 0, 0)
+    text_color = Color(255,   0, 255)
     # clear the background canvas to background_color
     # arka plan tuvalini background_color olarak temizle
     stddraw.clear(background_color)
@@ -182,7 +186,7 @@ def display_game_menu(grid_height, grid_width):
     img_file = current_dir + "/images/menu_image.png"
     # center coordinates to display the image
     # resmi görüntülemek için merkez koordinatları
-    img_center_x, img_center_y = (grid_width - 1) / 2, grid_height - 7
+    img_center_x, img_center_y = (grid_width - 2), grid_height - 7
     # image is represented using the Picture class
     # resim, Resim sınıfı kullanılarak temsil edilir
     image_to_display = Picture(img_file)
@@ -229,7 +233,7 @@ def display_game_menu(grid_height, grid_width):
 def display_gameover_menu(grid_height, grid_width):
     # colors used for the menu
     # menü için kul lanılan renk
-    background_color = Color(42, 69, 99)
+    background_color = Color(255, 255, 255)
     button_color = Color(25, 255, 228)
     text_color = Color(31, 160, 239)
     # clear the background canvas to background_color
@@ -262,6 +266,67 @@ def display_gameover_menu(grid_height, grid_width):
 
     # menu interaction loop
     # menü etkileşim döngüsü
+
+def display_pause_menu(grid_height, grid_width):
+        # colors used for the menu
+        # menü için kul lanılan renk
+        background_color = Color(255, 255, 255)
+        button_color = Color(0, 0, 0)
+        text_color = Color(255,   0, 255)
+        # clear the background canvas to background_color
+        # arka plan tuvalini background_color olarak temizle
+        stddraw.clear(background_color)
+        # get the directory in which this python code file is placed
+        # bu python kod dosyasının yerleştirildiği dizini alın
+        current_dir = os.path.dirname(os.path.realpath(__file__))
+        # path of the image file
+        # görüntü dosyasının yolu
+        img_file = current_dir + "/images/pause.png"
+        # center coordinates to display the image
+        # resmi görüntülemek için merkez koordinatları
+        img_center_x, img_center_y = (grid_width - 1) / 2, grid_height - 6
+        # image is represented using the Picture class
+        # resim, Resim sınıfı kullanılarak temsil edilir
+        image_to_display = Picture(img_file)
+        # display the image
+        # resmi göster
+        stddraw.picture(image_to_display, img_center_x, img_center_y)
+        # dimensions of the start game button
+        # oyunu başlat düğmesinin boyutları
+        button_w, button_h = grid_width - 1.5, 2
+        # coordinates of the bottom left corner of the start game button
+        # oyunu başlat düğmesinin sol alt köşesinin koordinatları
+        button_blc_x, button_blc_y = img_center_x - button_w / 2.25, 14
+        # display the start game button as a filled rectangle
+        # oyunu başlat düğmesini içini dolu bir dikdörtgen olarak göster
+        stddraw.setPenColor(button_color)
+        stddraw.filledRectangle(button_blc_x, button_blc_y, button_w, button_h)
+        # display the text on the start game button
+        # oyunu başlat düğmesindeki metni göster
+        stddraw.setFontFamily("Arial")
+        stddraw.setFontSize(50)
+        stddraw.setPenColor(text_color)
+        text_to_display = "Continue"
+        stddraw.text(img_center_x, 15, text_to_display)
+        # menu interaction loop
+        # menü etkileşim döngüsü
+        while True:
+            # display the menu and wait for a short time (50 ms)
+            # menüyü görüntüleyin ve kısa bir süre bekleyin (50 ms)
+            stddraw.show(50)
+            # check if the mouse has been left-clicked on the button
+            # farenin düğmeye sol tıklanıp tıklanmadığını kontrol edin
+            if stddraw.mousePressed():
+                # get the x and y coordinates of the location at which the mouse has
+                # most recently been left-clicked
+                # farenin bulunduğu konumun x ve y koordinatlarını alın
+                # en son sol tıklandı
+                mouse_x, mouse_y = stddraw.mouseX(), stddraw.mouseY()
+                # check if these coordinates are inside the button
+                # bu koordinatların düğmenin içinde olup olmadığını kontrol edin
+                if mouse_x >= button_blc_x and mouse_x <= button_blc_x + button_w:
+                    if mouse_y >= button_blc_y and mouse_y <= button_blc_y + button_h:
+                        break
 
 
 # start() function is specified as the entry point (main function) from which

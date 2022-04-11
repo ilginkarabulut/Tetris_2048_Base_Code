@@ -19,6 +19,8 @@ class GameGrid:
         self.grid_height = grid_h
         self.grid_width = grid_w
 
+        self.score = 0
+
         # create a tile matrix to store the tiles landed onto the game grid
         # oyun ızgarasına konan karoları depolamak için bir karo matrisi oluşturun
         self.tile_matrix = np.full((grid_h, grid_w), None)
@@ -62,7 +64,7 @@ class GameGrid:
         if self.current_tetromino is not None:
             self.current_tetromino.draw()
 
-        self.show_next_piece(self.tetro_array)
+        self.show_next_piece(self.tetro_array, str(self.score))
         # draw a box around the game grid
         # oyun ızgarasının etrafına bir kutu çizin
         self.draw_boundaries()
@@ -121,11 +123,21 @@ class GameGrid:
         stddraw.rectangle(pos_x + self.grid_width, pos_y, self.grid_width, self.grid_height)
         stddraw.filledRectangle(pos_x + self.grid_width, pos_y, self.grid_width, self.grid_height)
 
-    def show_next_piece(self, arr):
+    def show_next_piece(self, arr, score):
+        stddraw.boldText(14, 13, score)
         stddraw.setFontSize(20)
-        stddraw.boldText(14, 6, "Next Tetromino")
+        stddraw.boldText(15, 6, "NEXT TETROMINO")
         arr[1].draw_next_tetromino()
         stddraw.rectangle(12, 1, 6, 7)
+        stddraw.setFontSize(20)
+        stddraw.boldText(14, 14, "SCORE")
+        arr[1].draw_next_tetromino()
+        stddraw.rectangle(12, 9, 6, 7)
+        stddraw.setFontSize(20)
+        stddraw.boldText(14, 18, "PAUSE")
+        stddraw.boldText(14, 17, "P")
+        arr[1].draw_next_tetromino()
+        stddraw.rectangle(12, 16.5, 6, 2)
 
 
 
@@ -134,6 +146,7 @@ class GameGrid:
         height = self.grid_height
         width = self.grid_width
         count = 0
+        score = 0
 
         for i in range(height):
 
@@ -142,6 +155,7 @@ class GameGrid:
                     count += 1
             if count >= 12:
                 for k in range(width):
+                    score += self.tile_matrix[i][k].number
                     self.tile_matrix[i][k] = None
                     for x in range(i, self.grid_height - 1):
                         if self.tile_matrix[x + 1][k] is not None:
@@ -150,7 +164,7 @@ class GameGrid:
                             self.tile_matrix[x + 1][k] = None
                             self.tile_matrix[x][k] = tmp
             count = 0
-
+        self.score += score
 
     def DropCurrentTetromino(self):
         while self.current_tetromino.can_be_moved("down", self):

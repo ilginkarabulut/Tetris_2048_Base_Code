@@ -354,23 +354,4 @@ class Tetromino:
         return True  # tetromino can be moved in the given direction
         # tetromino verilen yönde hareket ettirilebilir
 
-    def rotate(self, game_grid):
-        n = len(self.tile_matrix)
-        self.bottom_left_cell = Point()
-        self.bottom_left_cell.y = self.grid_height - 1
-        n_tile_matrix = np.array(self.tile_matrix)
-        self.bottom_left_cell.x = random.randint(0, self.grid_width - n)
-        for row in range(n):
-            for col in range(n):
-                position = Point()
-                if self.tile_matrix[row][col]:
-                    position.x = row
-                    position.y = col
-                else:
-                    position.x = self.bottom_left_cell.x + col
-                    position.y = self.bottom_left_cell.y + (n - 1) - row
-                if position.x < 0 or position.x >= self.grid_width:
-                    return False
-                if game_grid.is_occupied(position):
-                    return False
-        rotated_matrix = ()
+
