@@ -335,3 +335,4 @@ def display_pause_menu(grid_height, grid_width):
 # program yürütmeye başlar
 if __name__ == '__main__':
     start()
+
